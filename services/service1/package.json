@@ -1,0 +1,34 @@
+{
+  "name": "service1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon -r ./basic-tracing.js ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "*.json"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.5.5",
+    "@opentelemetry/api": "^1.0.4",
+    "@opentelemetry/auto-instrumentations-node": "^0.28.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.27.0",
+    "@opentelemetry/exporter-trace-otlp-http": "^0.27.0",
+    "@opentelemetry/resources": "^1.0.1",
+    "@opentelemetry/sdk-node": "^0.27.0",
+    "@opentelemetry/semantic-conventions": "^1.0.1",
+    "axios": "^0.26.1",
+    "express": "^4.17.3",
+    "winston": "^3.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
