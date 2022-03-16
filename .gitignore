@@ -1,4 +1,4 @@
 node_modules/
 .env
-otelcol-contrib_*
+otelcol-contrib*
 logs/
