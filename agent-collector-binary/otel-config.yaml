@@ -2,18 +2,15 @@ receivers:
   filelog:
     include: [./services/*/logs/*.json]
     attributes: { fluent_tag: "tail.0" }
-    operators:
-      # - type: json_parser
-      #     timestamp:
-      #       parse_from: time
-      #       layout: "%Y-%m-%d %H:%M:%S"
-      # - type: trace_parser
-      #   trace_id:
-      #     parse_from: trace_id
-      #   span_id:
-      #     parse_from: span_id
-      #   trace_flags:
-      #     parse_from: trace_flags
+    # operators:
+    #   - type: json_parser
+    #   - type: trace_parser
+    #     trace_id:
+    #       parse_from: trace_id
+    #     span_id:
+    #       parse_from: span_id
+    #     trace_flags:
+    #       parse_from: trace_flags
 exporters:
   logging:
   otlp:
