@@ -3,14 +3,6 @@ receivers:
     protocols:
       grpc:
         endpoint: "0.0.0.0:4317"
-  fluentforward:
-    endpoint: "0.0.0.0:8006"
-processors:
-  attributes:
-    actions:
-      - key: fluent_tag
-        value: tail.0
-        action: insert
 exporters:
   logging:
     loglevel: debug
@@ -34,8 +26,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [attributes]
       exporters: [logging, jaeger, otlp]
     logs:
-      receivers: [fluentforward, otlp]
+      receivers: [otlp]
       exporters: [logging, loki]

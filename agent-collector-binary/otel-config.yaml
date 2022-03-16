@@ -1,7 +1,13 @@
 receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+  # fluentforward:
+  #   endpoint: "0.0.0.0:8006"
   filelog:
     include: [./services/*/logs/*.json]
-    resource: { service: "service0" }
+    resource: { service: "service1" }
     # operators:
     #   - type: json_parser
     #   - type: trace_parser
@@ -11,14 +17,28 @@ receivers:
     #       parse_from: span_id
     #     trace_flags:
     #       parse_from: trace_flags
+processors:
+  # transform:
+  #   traces:
+  #     queries:
+  #       - set(attributes["service"], resource.attributes["service.name"])
+  attributes:
+    actions:
+      - key: service
+        value: service1
+        action: upsert
 exporters:
   logging:
   otlp:
-    endpoint: 0.0.0.0:4317
+    endpoint: localhost:4319
     tls:
       insecure: true
 service:
   pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [attributes]
+      exporters: [logging, otlp]
     logs:
-      receivers: [filelog]
+      receivers: [filelog] ## fluentforward
       exporters: [logging, otlp]
