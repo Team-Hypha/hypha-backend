@@ -1,6 +1,7 @@
 receivers:
   filelog:
     include: [./services/*/logs/*.json]
+    attributes: { fluent_tag: "tail.0" }
     operators:
       # - type: json_parser
       #     timestamp:
