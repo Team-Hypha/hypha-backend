@@ -48,7 +48,7 @@ datasources:
       httpMethod: GET
       tracesToLogs:
         datasourceUid: "Loki"
-        tags: ["fluent_tag"]
+        tags: ["service"]
         spanStartTimeShift: "-1h"
         spanEndTimeShift: "1h"
         filterByTraceID: true
