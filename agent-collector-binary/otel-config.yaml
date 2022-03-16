@@ -1,7 +1,7 @@
 receivers:
   filelog:
     include: [./services/*/logs/*.json]
-    attributes: { fluent_tag: "tail.0" }
+    resource: { service: "service0" }
     # operators:
     #   - type: json_parser
     #   - type: trace_parser

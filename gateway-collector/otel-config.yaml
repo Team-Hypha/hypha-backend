@@ -20,6 +20,7 @@ exporters:
       attributes:
         fluent.tag: "fluent_tag"
         file.name: "file_name"
+      resource:
         service: "service"
   jaeger:
     endpoint: jaeger-all-in-one:14250
