@@ -12,7 +12,7 @@ datasources:
     jsonData:
       httpMethod: GET
       tracesToLogs:
-        datasourceUid: "Loki"
+        datasourceUid: loki
         tags: ["service"]
         spanStartTimeShift: "-1h"
         spanEndTimeShift: "1h"
@@ -27,8 +27,8 @@ datasources:
     editable: true
     jsonData:
       maxLines: 1000
-      # derivedFields:
-      #   - datasourceUid: jaeger
-      #     matcherRegex: (?:traceid)":"(\w+)
-      #     name: traceID
-      #     url: $${__value.raw}
+      derivedFields:
+        - datasourceUid: jaeger
+          matcherRegex: '"(?:traceid)":"(\w+)"'
+          name: traceID
+          url: $${__value.raw}
