@@ -9,14 +9,13 @@ receivers:
     include: [./services/*/logs/*.json]
     resource: { service: "service1" }
     # operators:
-    #   - type: json_parser
-    #   - type: trace_parser
-    #     trace_id:
-    #       parse_from: trace_id
-    #     span_id:
-    #       parse_from: span_id
-    #     trace_flags:
-    #       parse_from: trace_flags
+      # - type: trace_parser
+      #   TraceId:
+      #     parse_from: trace_id
+      #   SpanId:
+      #     parse_from: span_id
+      #   TraceFlags:
+      #     parse_from: trace_flags
 processors:
   attributes:
     actions:

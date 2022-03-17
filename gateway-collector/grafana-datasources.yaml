@@ -35,6 +35,10 @@ datasources:
           matcherRegex: (?:"trace_id"):"(\w+)"
           name: TraceID
           url: $${__value.raw}
+        # - datasourceUid: jaeger
+        #   matcherRegex: (?:"trace_id"|"TraceId"):"(\w+)"
+        #   name: traceID
+        #   url: $${__value.raw}
 
   - name: Jaeger
     type: jaeger
