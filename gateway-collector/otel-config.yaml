@@ -8,10 +8,12 @@ exporters:
     loglevel: debug
   loki:
     endpoint: "http://loki:3100/loki/api/v1/push"
+    format: json
     labels:
       attributes:
         fluent.tag: "fluent_tag"
         file.name: "file_name"
+        level: "level"
       resource:
         service: "service"
   jaeger:

@@ -7,15 +7,21 @@ receivers:
   #   endpoint: "0.0.0.0:8006"
   filelog:
     include: [./services/*/logs/*.json]
-    resource: { service: "service1" }
-    # operators:
-      # - type: trace_parser
-      #   TraceId:
-      #     parse_from: trace_id
-      #   SpanId:
-      #     parse_from: span_id
-      #   TraceFlags:
-      #     parse_from: trace_flags
+    operators:
+      - type: json_parser
+      - type: copy
+        from: level
+        to: $$attributes.level
+      - type: copy
+        from: service
+        to: $$resource.service
+      - type: trace_parser
+        TraceId:
+          parse_from: trace_id
+        SpanId:
+          parse_from: span_id
+        TraceFlags:
+          parse_from: trace_flags
 processors:
   attributes:
     actions:
@@ -24,6 +30,7 @@ processors:
         action: upsert
 exporters:
   logging:
+    loglevel: debug
   otlp:
     endpoint: localhost:4319
     tls:
