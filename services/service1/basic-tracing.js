@@ -23,7 +23,19 @@ const sdk = new opentelemetry.NodeSDK({
     [SemanticResourceAttributes.SERVICE_NAME]: "service1",
   }),
   traceExporter: exporter,
-  instrumentations: [getNodeAutoInstrumentations()],
+  instrumentations: [getNodeAutoInstrumentations({
+    // load custom configuration for http instrumentation
+    '@opentelemetry/instrumentation-http': {
+      applyCustomAttributesOnSpan: (span) => {
+        span.setAttribute('service', 'service1');
+      },
+    },
+    '@opentelemetry/instrumentation-winston': {
+      logHook: (_, record) => {
+        record['service'] = 'service1';
+      },
+    },
+  })],
 });
 
 // initialize the SDK and register with the OpenTelemetry API

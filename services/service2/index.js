@@ -3,7 +3,7 @@ const app = express();
 const winston = require("winston");
 
 const logger = winston.createLogger({
-  defaultMeta: { service: "service2" },
+  // defaultMeta: { service: "service2" },
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({

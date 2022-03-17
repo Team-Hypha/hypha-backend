@@ -11,8 +11,6 @@ exporters:
     format: json
     labels:
       attributes:
-        fluent.tag: "fluent_tag"
-        file.name: "file_name"
         level: "level"
       resource:
         service: "service"

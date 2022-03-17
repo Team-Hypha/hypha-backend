@@ -5,7 +5,7 @@ const winston = require("winston");
 const axios = require("axios");
 
 const logger = winston.createLogger({
-  defaultMeta: { service: "service1" }, // in the future this will be set as an env variable
+  // defaultMeta: { service: "service1" }, // in the future this will be set as an env variable
   transports: [
     new winston.transports.Console(),
     new winston.transports.File({

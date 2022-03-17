@@ -7,6 +7,7 @@ receivers:
   #   endpoint: "0.0.0.0:8006"
   filelog:
     include: [./services/*/logs/*.json]
+    include_file_name: false
     operators:
       - type: json_parser
       - type: copy
@@ -22,12 +23,6 @@ receivers:
           parse_from: span_id
         TraceFlags:
           parse_from: trace_flags
-processors:
-  attributes:
-    actions:
-      - key: service
-        value: service1
-        action: upsert
 exporters:
   logging:
     loglevel: debug
@@ -39,7 +34,6 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [attributes]
       exporters: [logging, otlp]
     logs:
       receivers: [filelog] ## fluentforward
