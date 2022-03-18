@@ -4,7 +4,7 @@ receivers:
       grpc:
         endpoint: "0.0.0.0:4317"
   filelog:
-    include: [./services/$OTEL_SERVICE_NAME/logs/*.json]
+    include: [./service/logs/*.json]
     include_file_name: false
     operators:
       - type: json_parser
