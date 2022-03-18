@@ -29,3 +29,4 @@ in a new terminal:
 **Make Requests**
 Navigate to `localhost` ports `3001` and `3002` to generate requests in the demo.
 View Grafana on `localhost` port `3000`.
+
