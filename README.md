@@ -32,28 +32,29 @@ View Grafana on `localhost` port `3000`.
 
 ## Installation and Usage - Dockerized
 
-**Service 1**
+**Build Service 1**
 build `demo-service1`
 
--
+- `cd dockerized-demo/service1`
+- make sure you have `otelcol-contrib` saved in `service1` folder
+- `docker build -t demo-service1 .`
 
-**Service 2**
-in a new terminal:
+**Build Service 2**
+build `demo-service2`
 
-- `cd services/service2`
-- `npm run dev`
+- `cd dockerized-demo/service2`
+- make sure you have `otelcol-contrib` saved in `service2` folder
+- `docker build -t demo-service2 .`
+
+**Start Service 1, Service 2, and their Agents**
+from `dockerized_demo` folder:
+
+- `docker compose up`
 
 **Gateway Collector**
-in a new terminal:
+in a new terminal from project root:
 
 - `docker compose -f ./gateway-collector/docker-compose.yaml up --force-recreate`
-
-**Agent (either OtelCol-Contrib or Fluent Bit)**
-in a new terminal:
-
-- `otelcol-contrib --config ./agent-collector-binary/otel-config.yaml`
-  OR
-- `fluent-bit -c fluent-config/fluent.conf`
 
 **Make Requests**
 Navigate to `localhost` ports `3001` and `3002` to generate requests in the demo.
