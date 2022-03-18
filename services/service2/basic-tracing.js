@@ -20,7 +20,7 @@ const exporter = new OTLPTraceExporter({
 
 const sdk = new opentelemetry.NodeSDK({
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: "service2",
+    [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
   }),
   traceExporter: exporter,
   instrumentations: [getNodeAutoInstrumentations()],
