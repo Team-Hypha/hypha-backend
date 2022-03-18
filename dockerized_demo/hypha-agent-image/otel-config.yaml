@@ -1,0 +1,40 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+  # fluentforward:
+  #   endpoint: "0.0.0.0:8006"
+  filelog:
+    include: [./logs/*.json]
+    include_file_name: false
+    operators:
+      - type: json_parser
+      - type: copy
+        from: level
+        to: $$attributes.level
+      - type: copy
+        from: service
+        to: $$resource.service
+      - type: trace_parser
+        TraceId:
+          parse_from: trace_id
+        SpanId:
+          parse_from: span_id
+        TraceFlags:
+          parse_from: trace_flags
+exporters:
+  logging:
+    loglevel: debug
+  otlp:
+    endpoint: localhost:4319
+    tls:
+      insecure: true
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [logging] #, otlp]
+    logs:
+      receivers: [filelog] ## fluentforward
+      exporters: [logging] #, otlp]
