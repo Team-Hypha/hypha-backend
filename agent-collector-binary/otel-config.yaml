@@ -3,18 +3,13 @@ receivers:
     protocols:
       grpc:
         endpoint: "0.0.0.0:4317"
-  # fluentforward:
-  #   endpoint: "0.0.0.0:8006"
   filelog:
-    include: [./services/*/logs/*.json]
+    include: [./services/$OTEL_SERVICE_NAME/logs/*.json]
     include_file_name: false
     operators:
       - type: json_parser
-      - type: copy
-        from: level
-        to: $$attributes.level
-      - type: copy
-        from: service
+      - type: add
+        value: $OTEL_SERVICE_NAME
         to: $$resource.service
       - type: trace_parser
         TraceId:
@@ -23,6 +18,12 @@ receivers:
           parse_from: span_id
         TraceFlags:
           parse_from: trace_flags
+processors:
+  attributes:
+    actions:
+      - key: service
+        value: $OTEL_SERVICE_NAME
+        action: insert
 exporters:
   logging:
     loglevel: debug
@@ -34,7 +35,8 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
+      processors: [attributes]
       exporters: [logging, otlp]
     logs:
-      receivers: [filelog] ## fluentforward
+      receivers: [filelog]
       exporters: [logging, otlp]
