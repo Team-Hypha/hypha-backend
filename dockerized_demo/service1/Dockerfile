@@ -15,5 +15,6 @@ COPY otel-config.yaml otel-config.yaml
 COPY index.js index.js
 COPY basic-tracing.js basic-tracing.js
 COPY run_with_agent.sh run_with_agent.sh
+RUN mkdir logs
 
 CMD ./run_with_agent.sh

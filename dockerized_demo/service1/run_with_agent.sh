@@ -1,5 +1,5 @@
 # Start the second process
-nodemon -r ./basic-tracing.js index.js &
+node --require './basic-tracing.js' index.js &
   
 # Start the first process
 ./otelcol-contrib --config ./otel-config.yaml

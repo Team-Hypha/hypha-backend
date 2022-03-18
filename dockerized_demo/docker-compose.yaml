@@ -5,7 +5,7 @@ services:
     ports:
       - "3001:3001"
       - "3002"
-      - "4319:4319"
+      - "4319"
     environment:
       OTEL_SERVICE_NAME: service1
   service2:
@@ -13,6 +13,6 @@ services:
     ports:
       - "3002:3002"
       - "3001"
-      - "4319:4319"
+      - "4319"
     environment:
       OTEL_SERVICE_NAME: service2

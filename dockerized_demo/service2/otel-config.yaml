@@ -28,7 +28,7 @@ exporters:
   logging:
     loglevel: debug
   otlp:
-    endpoint: localhost:4319
+    endpoint: "0.0.0.0:4319"
     tls:
       insecure: true
 service:

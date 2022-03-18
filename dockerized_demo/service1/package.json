@@ -4,13 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -r ./basic-tracing.js ./index.js",
+    "dev": "node --require './basic-tracing.js' index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "nodemonConfig": {
-    "ignore": [
-      "*.json"
-    ]
   },
   "keywords": [],
   "author": "",
@@ -27,8 +22,5 @@
     "axios": "^0.26.1",
     "express": "^4.17.3",
     "winston": "^3.6.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
   }
 }
