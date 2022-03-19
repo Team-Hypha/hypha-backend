@@ -33,7 +33,6 @@ View Grafana on `localhost` port `3000`.
 ## Installation and Usage - Dockerized
 
 **Start Service 1, Service 2, and their Agents**
-make sure `otelcol-contrib` is in both `service1` and `service2` dirs
 from `dockerized_demo` folder:
 
 - `docker compose up --build`
