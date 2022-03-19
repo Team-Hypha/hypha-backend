@@ -3,19 +3,14 @@ receivers:
     protocols:
       grpc:
         endpoint: "0.0.0.0:4317"
-  # fluentforward:
-  #   endpoint: "0.0.0.0:8006"
   filelog:
     include: [./logs/*.json]
     include_file_name: false
     operators:
       - type: json_parser
-      - type: copy
-        from: level
-        to: $$attributes.level
-      - type: copy
-        from: service
-        to: $$resource.service
+      - type: add
+        field: $$resource.service
+        value: $OTEL_SERVICE_NAME
       - type: trace_parser
         TraceId:
           parse_from: trace_id
@@ -23,18 +18,25 @@ receivers:
           parse_from: span_id
         TraceFlags:
           parse_from: trace_flags
+processors:
+  attributes:
+    actions:
+      - key: service
+        value: $OTEL_SERVICE_NAME
+        action: insert
 exporters:
   logging:
     loglevel: debug
   otlp:
-    endpoint: localhost:4319
+    endpoint: "host.docker.internal:4319" # this references the host's localhost (see docker-compose)
     tls:
       insecure: true
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging] #, otlp]
+      processors: [attributes]
+      exporters: [logging, otlp]
     logs:
-      receivers: [filelog] ## fluentforward
-      exporters: [logging] #, otlp]
+      receivers: [filelog]
+      exporters: [logging, otlp]

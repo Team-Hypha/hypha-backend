@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Start the agent collector
 ./otelcol-contrib --config ./otel-config.yaml &
