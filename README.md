@@ -32,24 +32,11 @@ View Grafana on `localhost` port `3000`.
 
 ## Installation and Usage - Dockerized
 
-**Build Service 1**
-build `demo-service1`
-
-- `cd dockerized_demo/service1`
-- make sure you have `otelcol-contrib` saved in `service1` folder
-- `docker build -t demo-service1 .`
-
-**Build Service 2**
-build `demo-service2`
-
-- `cd dockerized_demo/service2`
-- make sure you have `otelcol-contrib` saved in `service2` folder
-- `docker build -t demo-service2 .`
-
 **Start Service 1, Service 2, and their Agents**
+make sure `otelcol-contrib` is in both `service1` and `service2` dirs
 from `dockerized_demo` folder:
 
-- `docker compose up`
+- `docker compose up --build`
 
 **Gateway Collector**
 in a new terminal from project root:

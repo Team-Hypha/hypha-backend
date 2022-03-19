@@ -6,9 +6,6 @@ COPY package.json package.json
 RUN npm install
 
 EXPOSE 3001
-# EXPOSE 3002
-# EXPOSE 4317
-# EXPOSE 4319
 
 COPY otelcol-contrib otelcol-contrib
 COPY otel-config.yaml otel-config.yaml
