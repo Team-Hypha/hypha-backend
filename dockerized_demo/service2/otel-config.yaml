@@ -3,21 +3,21 @@ receivers:
     protocols:
       grpc:
         endpoint: "0.0.0.0:4317"
-  filelog:
-    include: [./logs/*.json]
-    include_file_name: false
-    operators:
-      - type: json_parser
-      - type: add
-        value: $OTEL_SERVICE_NAME
-        to: $$resource.service
-      - type: trace_parser
-        TraceId:
-          parse_from: trace_id
-        SpanId:
-          parse_from: span_id
-        TraceFlags:
-          parse_from: trace_flags
+  # filelog:
+  #   include: [./logs/*.json]
+  #   include_file_name: false
+  #   operators:
+  #     - type: json_parser
+  #     - type: add
+  #       value: $OTEL_SERVICE_NAME
+  #       to: $$resource.service
+  #     - type: trace_parser
+  #       TraceId:
+  #         parse_from: trace_id
+  #       SpanId:
+  #         parse_from: span_id
+  #       TraceFlags:
+  #         parse_from: trace_flags
 processors:
   attributes:
     actions:
@@ -28,7 +28,7 @@ exporters:
   logging:
     loglevel: debug
   otlp:
-    endpoint: "0.0.0.0:4319"
+    endpoint: "host.docker.internal:4319"
     tls:
       insecure: true
 service:
@@ -37,6 +37,6 @@ service:
       receivers: [otlp]
       processors: [attributes]
       exporters: [logging, otlp]
-    logs:
-      receivers: [filelog]
-      exporters: [logging, otlp]
+    # logs:
+    #   receivers: [filelog]
+    #   exporters: [logging, otlp]

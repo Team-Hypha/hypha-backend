@@ -1,18 +1,24 @@
 version: "3.8"
 services:
   service1:
-    image: demo-service1:latest
+    build: ./service1/
+    # image: demo-service1:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3001:3001"
-      - "3002"
-      - "4319"
+      # - "3002"
+      # - "4319"
     environment:
       OTEL_SERVICE_NAME: service1
   service2:
-    image: demo-service2:latest
+    build: ./service2/
+    # image: demo-service2:latest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3002:3002"
-      - "3001"
-      - "4319"
+      # - "3001"
+      # - "4319"
     environment:
       OTEL_SERVICE_NAME: service2
