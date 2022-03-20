@@ -32,15 +32,20 @@ View Grafana on `localhost` port `3000`.
 
 ## Installation and Usage - Dockerized
 
-**Start Service 1, Service 2, and their Agents**
-from `dockerized_demo` folder:
+**Build Hypha Agent Image**
+from `dockerized_demo/hypha-agent-image` folder:
 
-- `docker compose up --build`
+- `docker build . -t "hypha-agent"`
 
 **Gateway Collector**
 in a new terminal from project root:
 
 - `docker compose -f ./gateway-collector/docker-compose.yaml up --force-recreate`
+
+**Start Service 1, Service 2, and their Agents**
+from `dockerized_demo` folder:
+
+- `docker compose up --build`
 
 **Make Requests**
 Navigate to `localhost` ports `3001` and `3002` to generate requests in the demo.

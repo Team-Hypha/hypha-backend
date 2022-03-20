@@ -1,4 +1,5 @@
-FROM wboard82/hypha-agent:test
+# FROM wboard82/hypha-agent:test
+FROM hypha-agent:latest
 WORKDIR /
 COPY package.json package.json
 RUN npm install

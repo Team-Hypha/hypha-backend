@@ -11,6 +11,9 @@ receivers:
       - type: add
         field: $$resource.service
         value: $OTEL_SERVICE_NAME
+      - type: copy
+        from: level
+        to: $$attributes.level
       - type: trace_parser
         TraceId:
           parse_from: trace_id
