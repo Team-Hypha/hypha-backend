@@ -20,22 +20,10 @@ const exporter = new OTLPTraceExporter({
 
 const sdk = new opentelemetry.NodeSDK({
   resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: "service2",
+    [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
   }),
   traceExporter: exporter,
-  instrumentations: [getNodeAutoInstrumentations({
-    // load custom configuration for http instrumentation
-    '@opentelemetry/instrumentation-http': {
-      applyCustomAttributesOnSpan: (span) => {
-        span.setAttribute('service', 'service2');
-      },
-    },
-    '@opentelemetry/instrumentation-winston': {
-      logHook: (_, record) => {
-        record['service'] = 'service2';
-      },
-    },
-  })],
+  instrumentations: [getNodeAutoInstrumentations()],
 });
 
 // initialize the SDK and register with the OpenTelemetry API

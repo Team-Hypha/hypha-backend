@@ -18,15 +18,11 @@ exporters:
     endpoint: jaeger-all-in-one:14250
     tls:
       insecure: true
-  # otlp:
-  #   endpoint: tempo:4317
-  #   tls:
-  #     insecure: true
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging, jaeger] ## otlp for tempo removed
+      exporters: [logging, jaeger]
     logs:
       receivers: [otlp]
       exporters: [logging, loki]
