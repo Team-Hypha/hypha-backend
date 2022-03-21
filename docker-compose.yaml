@@ -19,6 +19,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     volumes:
+      - grafana-data:/var/lib/grafana
       - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -38,3 +39,5 @@ services:
       - jaeger-all-in-one
       - loki
       - grafana
+volumes:
+  grafana-data:
