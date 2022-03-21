@@ -1,5 +1,5 @@
-# FROM wboard82/hypha-agent:test
-FROM hypha-agent:latest
+FROM wboard82/hypha-agent:test
+# FROM hypha-agent:latest # use this if you want to use a local binary
 WORKDIR /
 COPY package.json package.json
 RUN npm install
