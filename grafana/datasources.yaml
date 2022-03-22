@@ -5,7 +5,7 @@ datasources:
     type: jaeger
     uid: jaeger
     access: proxy
-    url: http://jaeger-all-in-one:16686
+    url: http://jaeger:16686
     basicAuth: false
     editable: true
     isDefault: false
