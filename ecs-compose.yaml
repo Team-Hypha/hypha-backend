@@ -1,0 +1,91 @@
+version: "3"
+services:
+  jaeger:
+    container_name: hypha-jaeger
+    image: jaegertracing/all-in-one:latest
+    cpu_shares: 50
+    mem_limit: 970896000
+    volumes:
+      - jaeger_data:/badger
+    #   - "./jaeger-ui.json:/etc/jaeger/jaeger-ui.json"
+    # command: --query.ui-config /etc/jaeger/jaeger-ui.json
+    environment:
+      - SPAN_STORAGE_TYPE=badger
+      - BADGER_EPHEMERAL=false
+      - BADGER_DIRECTORY_VALUE=/badger/data
+      - BADGER_DIRECTORY_KEY=/badger/key
+    ports:
+      - "16686:16686"
+      - "14268"
+      - "14250"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: hypha-backend
+        awslogs-region: us-east-2
+        awslogs-stream-prefix: jaeger
+
+  loki:
+    container_name: hypha-loki
+    image: grafana/loki:latest
+    cpu_shares: 50
+    mem_limit: 970896000
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+    #   - ./loki-config.yaml:/etc/loki/loki-config.yaml
+    ports:
+      - 3100:3100
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: hypha-backend
+        awslogs-region: us-east-2
+        awslogs-stream-prefix: loki
+
+  grafana:
+    container_name: hypha-grafana
+    image: grafana/grafana:latest
+    cpu_shares: 50
+    mem_limit: 970896000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: hypha-backend
+        awslogs-region: us-east-2
+        awslogs-stream-prefix: grafana
+
+  collector:
+    container_name: hypha-collector
+    image: otel/opentelemetry-collector-contrib:latest
+    cpu_shares: 50
+    mem_limit: 970896000
+    volumes:
+      - ./otel-config.yaml:/otel-config.yaml
+    command: ["--config", "/otel-config.yaml"]
+    ports:
+      - "4319:4317" # grpc  host:container
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: hypha-backend
+        awslogs-region: us-east-2
+        awslogs-stream-prefix: collector
+    depends_on:
+      - jaeger-all-in-one
+      - loki
+      - grafana
+volumes:
+  jaeger_data:
+  loki_data:
+  grafana_data:
