@@ -1,6 +1,7 @@
 version: "3"
 services:
-  jaeger-all-in-one:
+  jaeger:
+    container_name: hypha-jaeger
     image: jaegertracing/all-in-one:latest
     volumes:
       - jaeger_data:/badger
@@ -17,8 +18,8 @@ services:
       - "14250"
 
   loki:
+    container_name: hypha-loki
     image: grafana/loki:latest
-    # container_name: loki
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
@@ -27,11 +28,12 @@ services:
       - 3100:3100
 
   grafana:
+    container_name: hypha-grafana
     image: grafana/grafana:latest
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      # - ./grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
+      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -39,7 +41,8 @@ services:
     ports:
       - "3000:3000"
 
-  otel-collector-gateway:
+  collector:
+    container_name: hypha-collector
     image: otel/opentelemetry-collector-contrib:latest
     volumes:
       - ./otel-config.yaml:/otel-config.yaml
