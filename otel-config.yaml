@@ -14,15 +14,15 @@ exporters:
         level: "level"
       resource:
         service: "service"
-  jaeger:
-    endpoint: jaeger:14250
+  otlp/tempo:
+    endpoint: tempo:4317
     tls:
       insecure: true
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging, jaeger]
+      exporters: [logging, otlp/tempo]
     logs:
       receivers: [otlp]
       exporters: [logging, loki]

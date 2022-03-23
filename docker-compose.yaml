@@ -1,22 +1,32 @@
 version: "3"
 services:
-  jaeger:
-    container_name: hypha-jaeger
-    image: jaegertracing/all-in-one:latest
+  # jaeger:
+  #   container_name: hypha-jaeger
+  #   image: jaegertracing/all-in-one:latest
+  #   volumes:
+  #     - jaeger_data:/badger
+  #   #   - "./jaeger-ui.json:/etc/jaeger/jaeger-ui.json"
+  #   # command: --query.ui-config /etc/jaeger/jaeger-ui.json
+  #   environment:
+  #     - SPAN_STORAGE_TYPE=badger
+  #     - BADGER_EPHEMERAL=false
+  #     - BADGER_DIRECTORY_VALUE=/badger/data
+  #     - BADGER_DIRECTORY_KEY=/badger/key
+  #   ports:
+  #     - "16686:16686"
+  #     - "14268"
+  #     - "14250"
+  tempo:
+    container_name: hypha-tempo
+    image: grafana/tempo:latest
+    command: ["-config.file=/etc/tempo.yaml"]
     volumes:
-      - jaeger_data:/badger
-    #   - "./jaeger-ui.json:/etc/jaeger/jaeger-ui.json"
-    # command: --query.ui-config /etc/jaeger/jaeger-ui.json
-    environment:
-      - SPAN_STORAGE_TYPE=badger
-      - BADGER_EPHEMERAL=false
-      - BADGER_DIRECTORY_VALUE=/badger/data
-      - BADGER_DIRECTORY_KEY=/badger/key
+      - ./tempo/tempo-local.yaml:/etc/tempo.yaml
+      - tempo_data:/tmp/tempo
     ports:
-      - "16686:16686"
-      - "14268"
-      - "14250"
-
+      - "3200:3200" # tempo
+      - "4317"
+      - "4318"
   loki:
     container_name: hypha-loki
     image: grafana/loki:latest
@@ -52,10 +62,11 @@ services:
     ports:
       - "4319:4317" # grpc  host:container
     depends_on:
-      - jaeger-all-in-one
+      - tempo
       - loki
       - grafana
 volumes:
-  jaeger_data:
+  # jaeger_data:
+  tempo_data:
   loki_data:
   grafana_data:
