@@ -2,11 +2,10 @@ version: "3"
 services:
   jaeger:
     container_name: hypha-jaeger
-    image: jaegertracing/all-in-one:latest
+    build: ./hypha-jaeger/
+    image: gontzess/hypha-jaeger:latest
     volumes:
       - jaeger_data:/badger
-    #   - "./jaeger-ui.json:/etc/jaeger/jaeger-ui.json"
-    # command: --query.ui-config /etc/jaeger/jaeger-ui.json
     environment:
       - SPAN_STORAGE_TYPE=badger
       - BADGER_EPHEMERAL=false
@@ -19,23 +18,20 @@ services:
 
   loki:
     container_name: hypha-loki
-    image: grafana/loki:latest
+    build: ./hypha-loki/
+    image: gontzess/hypha-loki:latest
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
-    #   - ./loki-config.yaml:/etc/loki/loki-config.yaml
     ports:
       - 3100:3100
 
   grafana:
     container_name: hypha-grafana
-    image: grafana/grafana:latest
+    build: ./hypha-grafana/
+    image: gontzess/hypha-grafana:latest
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./grafana/plugins:/var/lib/grafana/plugins
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
@@ -45,14 +41,13 @@ services:
 
   collector:
     container_name: hypha-collector
-    image: otel/opentelemetry-collector-contrib:latest
-    volumes:
-      - ./otel-config.yaml:/otel-config.yaml
+    build: ./hypha-collector/
+    image: gontzess/hypha-collector:latest
     command: ["--config", "/otel-config.yaml"]
     ports:
       - "4319:4317" # grpc  host:container
     depends_on:
-      - jaeger-all-in-one
+      - jaeger
       - loki
       - grafana
 volumes:
