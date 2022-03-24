@@ -55,6 +55,16 @@ services:
       - jaeger-all-in-one
       - loki
       - grafana
+
+  nginx:
+    container_name: hypha-nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/static:/var/www/hypha/static
+    ports:
+      - '80:80'
+
 volumes:
   jaeger_data:
   loki_data:
