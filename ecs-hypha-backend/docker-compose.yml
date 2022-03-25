@@ -2,7 +2,6 @@ version: "3"
 services:
   jaeger:
     container_name: hypha-jaeger
-    build: ./hypha-jaeger/
     image: gontzess/hypha-jaeger:latest
     # volumes:
     #   - jaeger_data:/badger
@@ -15,20 +14,30 @@ services:
       - "16686:16686"
       - "14268"
       - "14250"
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-group: hypha-backend
+    #     awslogs-region: us-east-2
+    #     awslogs-stream-prefix: jaeger
 
   loki:
     container_name: hypha-loki
-    build: ./hypha-loki/
     image: gontzess/hypha-loki:latest
     command: -config.file=/etc/loki/local-config.yaml
     # volumes:
     #   - loki_data:/loki
     ports:
       - 3100:3100
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-group: hypha-backend
+    #     awslogs-region: us-east-2
+    #     awslogs-stream-prefix: loki
 
   grafana:
     container_name: hypha-grafana
-    build: ./hypha-grafana/
     image: gontzess/hypha-grafana:latest
     # volumes:
     #   - grafana_data:/var/lib/grafana
@@ -38,14 +47,25 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-group: hypha-backend
+    #     awslogs-region: us-east-2
+    #     awslogs-stream-prefix: grafana
 
   collector:
     container_name: hypha-collector
-    build: ./hypha-collector/
     image: gontzess/hypha-collector:latest
     command: ["--config", "/otel-config.yaml"]
     ports:
       - "4317:4317" # grpc  host:container
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-group: hypha-backend
+    #     awslogs-region: us-east-2
+    #     awslogs-stream-prefix: collector
     depends_on:
       - jaeger
       - loki
