@@ -26,3 +26,9 @@ curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/instal
 7. From the `ecs-hypha-backend` directory, run `docker compose up`
 8. Once deployment processes complete, check status of services with `docker compose ps`
 9. Don't forget to switch your context back for local development! `docker context use default`
+
+To run locally:
+`docker compose up --build`
+
+To deploy to production:
+change context then `docker compose -f production.yml up`

@@ -19,7 +19,6 @@ services:
     environment:
       - SPAN_STORAGE_TYPE=elasticsearch
       - ES_SERVER_URLS=http://jaeger-elasticsearch:9200
-      - LOG_LEVEL=debug
     ports:
       - "16685:16685"
       - "16686:16686"
@@ -47,11 +46,12 @@ services:
       - loki_data:/loki
     ports:
       - "3100:3100"
+    restart: on-failure
 
   grafana:
     container_name: hypha-grafana
-    build: ./hypha-grafana/
     image: gontzess/hypha-grafana:latest
+    build: ./hypha-grafana/
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
@@ -60,21 +60,33 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
     ports:
       - "3000:3000"
+    restart: on-failure
 
   collector:
     container_name: hypha-collector
-    build: ./hypha-collector/
     image: gontzess/hypha-collector:latest
+    build: ./hypha-collector/
     command: ["--config", "/otel-config.yaml"]
     ports:
       - "4317:4317" # grpc  host:container
+    restart: on-failure
     depends_on:
       - jaeger-collector
       - jaeger-query
       - jaeger-elasticsearch
       - loki
       - grafana
+
 volumes:
   es_data:
+    driver_opts:
+      uid: 0
+      gid: 0
   loki_data:
+    driver_opts:
+      uid: 0
+      gid: 0
   grafana_data:
+    driver_opts:
+      uid: 0
+      gid: 0
