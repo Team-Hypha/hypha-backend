@@ -1,4 +1,4 @@
-FROM grafana/grafana:latest as base
+FROM grafana/grafana:latest
 WORKDIR /
 COPY ./datasources.yaml /etc/grafana/provisioning/datasources/datasources.yaml
 COPY ./dashboards /etc/grafana/provisioning/dashboards

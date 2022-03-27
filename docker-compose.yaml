@@ -5,42 +5,43 @@ services:
     image: jaegertracing/jaeger-collector:latest
     environment:
       - SPAN_STORAGE_TYPE=elasticsearch
-      - ES_SERVER_URLS=http://elasticsearch:9200
-      # - LOG_LEVEL=debug
+      - ES_SERVER_URLS=http://jaeger-elasticsearch:9200
     ports:
       - "14250" # where gateway sends to
+      - "14269:14269"
     restart: on-failure
     depends_on:
-      - elasticsearch
+      - jaeger-elasticsearch
 
   jaeger-query:
     container_name: hypha-jaeger-query
     image: jaegertracing/jaeger-query:latest
     environment:
       - SPAN_STORAGE_TYPE=elasticsearch
-      - ES_SERVER_URLS=http://elasticsearch:9200
+      - ES_SERVER_URLS=http://jaeger-elasticsearch:9200
       - LOG_LEVEL=debug
     ports:
+      - "16685:16685"
       - "16686:16686"
+      - "16687:16687"
     restart: on-failure
     depends_on:
-      - elasticsearch
+      - jaeger-elasticsearch
 
-  elasticsearch:
-    container_name: hypha-elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.9.0
+  jaeger-elasticsearch:
+    container_name: hypha-jaeger-elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
     volumes:
       - es_data:/usr/share/elasticsearch/data
     environment:
       - discovery.type=single-node
     ports:
-      - "9200:9200/tcp"
+      - "9200/tcp"
     restart: on-failure
 
   loki:
     container_name: hypha-loki
-    build: ./hypha-loki/
-    image: gontzess/hypha-loki:latest
+    image: grafana/loki:latest
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
@@ -70,7 +71,7 @@ services:
     depends_on:
       - jaeger-collector
       - jaeger-query
-      - elasticsearch
+      - jaeger-elasticsearch
       - loki
       - grafana
 volumes:
