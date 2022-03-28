@@ -43,13 +43,13 @@ services:
       - "9200:9200"
       - "9300:9300"
 
-  loki:
-    image: grafana/loki:latest
-    command: -config.file=/etc/loki/local-config.yaml
-    volumes:
-      - loki_data:/loki
-    ports:
-      - "3100:3100"
+  # loki:
+  #   image: grafana/loki:latest
+  #   command: -config.file=/etc/loki/local-config.yaml
+  #   volumes:
+  #     - loki_data:/loki
+  #   ports:
+  #     - "3100:3100"
 
   grafana:
     image: gontzess/hypha-grafana:latest
@@ -73,6 +73,103 @@ services:
       - jaeger-collector
       - loki
 
+  read:
+    image: gontzess/hypha-loki:latest
+    # build: ./hypha-loki/
+    command: "-config.file=/etc/loki/config.yaml -target=read"
+    # ports:
+    # - "3100"
+    # - "7946"
+    # - "9095"
+    depends_on:
+      - minio
+    networks: &loki-dns
+      loki:
+        aliases:
+          - loki
+
+  write:
+    image: gontzess/hypha-loki:latest
+    # build: ./hypha-loki/
+    command: "-config.file=/etc/loki/config.yaml -target=write"
+    # ports:
+    # - "3100"
+    # - "7946"
+    # - "9095"
+    depends_on:
+      - minio
+    networks:
+      <<: *loki-dns
+
+  minio:
+    image: minio/minio
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /data/loki-data && \
+        mkdir -p /data/loki-ruler && \
+        minio server /data
+    environment:
+      - MINIO_ACCESS_KEY=loki
+      - MINIO_SECRET_KEY=supersecret
+      - MINIO_PROMETHEUS_AUTH_TYPE=public
+      - MINIO_UPDATE=off
+    ports:
+      - "9000"
+    volumes:
+      - minio_data:/data
+    networks:
+      - loki
+
+  loki:
+    image: nginx:latest
+    depends_on:
+      - read
+      - write
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /etc/nginx/nginx.conf
+        user  nginx;
+        worker_processes  5;  ## Default: 1
+        events {
+          worker_connections   1000;
+        }
+        http {
+          resolver 127.0.0.11;
+          server {
+            listen             3100;
+            location = / {
+              return 200 'OK';
+              auth_basic off;
+            }
+            location = /loki/api/v1/push {
+              proxy_pass       http://write:3100\$$request_uri;
+            }
+            location = /loki/api/v1/tail {
+              proxy_pass       http://read:3100\$$request_uri;
+              proxy_set_header Upgrade \$$http_upgrade;
+              proxy_set_header Connection "upgrade";
+            }
+            location ~ /loki/api/.* {
+              proxy_pass       http://read:3100\$$request_uri;
+            }
+          }
+        }
+        EOF
+        /docker-entrypoint.sh nginx -g "daemon off;"
+    ports:
+      - "3100:3100"
+    networks:
+      - loki
+      - default
+
+networks:
+  loki:
+  default:
+
 volumes:
   es_data:
     driver_opts:
@@ -80,7 +177,11 @@ volumes:
       throughput-mode: bursting
       uid: 0
       gid: 0
-  loki_data:
+  # loki_data:
+  #   driver_opts:
+  #     uid: 0
+  #     gid: 0
+  minio_data:
     driver_opts:
       uid: 0
       gid: 0
