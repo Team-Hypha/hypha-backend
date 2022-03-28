@@ -21,8 +21,8 @@ curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/instal
 ```
 
 4. Create a new docker ecs context with `docker context create ecs <context-name>`
-5. Switch to the new ecs context with `docker context use myecs`
+5. Switch to the new ecs context with `docker context use <context-name>`
 6. Check that you're on the correct context with `docker context ls`
-7. From the `ecs-hypha-backend` directory, run `docker compose up`
+7. From the project root directory, run `docker compose up`
 8. Once deployment processes complete, check status of services with `docker compose ps`
 9. Don't forget to switch your context back for local development! `docker context use default`

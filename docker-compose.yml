@@ -1,0 +1,90 @@
+version: "3.8"
+services:
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector:latest
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+    ports:
+      - "14250" # where gateway sends to
+      - "14269:14269"
+    depends_on:
+      - elasticsearch
+
+  jaeger-query:
+    image: jaegertracing/jaeger-query:latest
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+    ports:
+      - "16685:16685"
+      - "16686:16686"
+      - "16687:16687"
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
+    deploy:
+      resources:
+        limits:
+          memory: 4Gb
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  loki:
+    image: grafana/loki:latest
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+    ports:
+      - "3100:3100"
+
+  grafana:
+    image: gontzess/hypha-grafana:latest
+    # build: ./hypha-grafana/
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    ports:
+      - "3000:3000"
+
+  collector:
+    image: gontzess/hypha-collector:latest
+    # build: ./hypha-collector/
+    command: ["--config", "/otel-config.yaml"]
+    ports:
+      - "4317:4317" # grpc  host:container
+    depends_on:
+      - jaeger-collector
+      - loki
+
+volumes:
+  es_data:
+    driver_opts:
+      performance-mode: maxIO
+      throughput-mode: bursting
+      uid: 0
+      gid: 0
+  loki_data:
+    driver_opts:
+      uid: 0
+      gid: 0
+  grafana_data:
+    driver_opts:
+      uid: 0
+      gid: 0
