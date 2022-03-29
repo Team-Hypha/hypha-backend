@@ -43,14 +43,6 @@ services:
       - "9200:9200"
       - "9300:9300"
 
-  # loki:
-  #   image: grafana/loki:latest
-  #   command: -config.file=/etc/loki/local-config.yaml
-  #   volumes:
-  #     - loki_data:/loki
-  #   ports:
-  #     - "3100:3100"
-
   grafana:
     image: gontzess/hypha-grafana:latest
     build: ./hypha-grafana/
@@ -77,10 +69,6 @@ services:
     image: gontzess/hypha-loki:latest
     build: ./hypha-loki/
     command: "-config.file=/etc/loki/config-local.yaml -target=read"
-    # ports:
-    #   - "3100"
-    #   - "7946"
-    #   - "9095"
     depends_on:
       - minio
 
@@ -88,10 +76,6 @@ services:
     image: gontzess/hypha-loki:latest
     build: ./hypha-loki/
     command: "-config.file=/etc/loki/config-local.yaml -target=write"
-    # ports:
-    #   - "3100"
-    #   - "7946"
-    #   - "9095"
     depends_on:
       - minio
 
@@ -143,8 +127,8 @@ services:
             }
             location = /loki/api/v1/tail {
               proxy_pass       http://loki-read:3100\$$request_uri;
-              ## proxy_set_header Upgrade \$$http_upgrade;
-              ## proxy_set_header Connection "upgrade";
+              proxy_set_header Upgrade \$$http_upgrade;
+              proxy_set_header Connection "upgrade";
             }
             location ~ /loki/api/.* {
               proxy_pass       http://loki-read:3100\$$request_uri;
@@ -158,20 +142,5 @@ services:
 
 volumes:
   es_data:
-    # driver_opts:
-    #   performance-mode: maxIO
-    #   throughput-mode: bursting
-    #   uid: 0
-    #   gid: 0
-  # loki_data:
-  #   driver_opts:
-  #     uid: 0
-  #     gid: 0
   minio_data:
-    # driver_opts:
-    #   uid: 0
-    #   gid: 0
   grafana_data:
-    # driver_opts:
-    #   uid: 0
-    #   gid: 0

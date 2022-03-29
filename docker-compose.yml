@@ -43,17 +43,8 @@ services:
       - "9200:9200"
       - "9300:9300"
 
-  # loki:
-  #   image: grafana/loki:latest
-  #   command: -config.file=/etc/loki/local-config.yaml
-  #   volumes:
-  #     - loki_data:/loki
-  #   ports:
-  #     - "3100:3100"
-
   grafana:
     image: gontzess/hypha-grafana:latest
-    # build: ./hypha-grafana/
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
@@ -65,7 +56,6 @@ services:
 
   collector:
     image: gontzess/hypha-collector:latest
-    # build: ./hypha-collector/
     command: ["--config", "/otel-config.yaml"]
     ports:
       - "4317:4317" # grpc  host:container
@@ -75,23 +65,13 @@ services:
 
   loki-read:
     image: gontzess/hypha-loki:latest
-    # build: ./hypha-loki/
     command: "-config.file=/etc/loki/config.yaml -target=read"
-    # ports:
-    #   - "3100"
-    #   - "7946"
-    #   - "9095"
     depends_on:
       - minio
 
   loki-write:
     image: gontzess/hypha-loki:latest
-    # build: ./hypha-loki/
     command: "-config.file=/etc/loki/config.yaml -target=write"
-    # ports:
-    #   - "3100"
-    #   - "7946"
-    #   - "9095"
     depends_on:
       - minio
 
@@ -143,8 +123,8 @@ services:
             }
             location = /loki/api/v1/tail {
               proxy_pass       http://loki-read.hypha-backend.local:3100\$$request_uri;
-              ## proxy_set_header Upgrade \$$http_upgrade;
-              ## proxy_set_header Connection "upgrade";
+              proxy_set_header Upgrade \$$http_upgrade;
+              proxy_set_header Connection "upgrade";
             }
             location ~ /loki/api/.* {
               proxy_pass       http://loki-read.hypha-backend.local:3100\$$request_uri;
@@ -163,10 +143,6 @@ volumes:
       throughput-mode: bursting
       uid: 0
       gid: 0
-  # loki_data:
-  #   driver_opts:
-  #     uid: 0
-  #     gid: 0
   minio_data:
     driver_opts:
       uid: 0

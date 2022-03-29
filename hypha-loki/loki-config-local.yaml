@@ -5,8 +5,6 @@ server:
 memberlist:
   abort_if_cluster_join_fails: false
   join_members:
-    # - loki-read.hypha-backend.local:7946
-    # - loki-write.hypha-backend.local:7946
     - loki-read:7946
     - loki-write:7946
 schema_config:
