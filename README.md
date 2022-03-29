@@ -2,7 +2,7 @@
 
 ### Local Deployment
 
-1. From project root directory, run `docker compose up --build`
+1. From project root directory, run `docker compose -f local-compose.yml up --build`
 2. View Grafana on `localhost` port `3000`
 
 ### AWS ECS Deployment
