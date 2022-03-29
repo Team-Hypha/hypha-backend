@@ -73,18 +73,26 @@ services:
       - jaeger-collector
       - loki
 
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./hypha-nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./hypha-nginx/static:/var/www/hypha/static
+    ports:
+      - '80:80'
+
 volumes:
   es_data:
-    driver_opts:
-      performance-mode: maxIO
-      throughput-mode: bursting
-      uid: 0
-      gid: 0
+    # driver_opts:
+    #   performance-mode: maxIO
+    #   throughput-mode: bursting
+    #   uid: 0
+    #   gid: 0
   loki_data:
-    driver_opts:
-      uid: 0
-      gid: 0
+    # driver_opts:
+    #   uid: 0
+    #   gid: 0
   grafana_data:
-    driver_opts:
-      uid: 0
-      gid: 0
+    # driver_opts:
+    #   uid: 0
+    #   gid: 0
