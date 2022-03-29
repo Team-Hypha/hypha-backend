@@ -9,8 +9,8 @@
 
 <!-- TODO: Expand AWS and AWS CLI configuration details -->
 
-1. Configure AWS credentials
-2. Install AWS CLI latest version
+1. Install AWS CLI latest version
+2. Configure AWS credentials
 3. Configure [Docker ECS Integration](https://docs.docker.com/cloud/ecs-integration/)
 
 - If on MacOS or Windows, install latest version of Docker Desktop
