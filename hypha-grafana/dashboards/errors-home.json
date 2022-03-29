@@ -103,9 +103,7 @@
       "options": {
         "footer": {
           "fields": "",
-          "reducer": [
-            "sum"
-          ],
+          "reducer": ["sum"],
           "show": false
         },
         "showHeader": true
@@ -166,9 +164,7 @@
       "options": {
         "footer": {
           "fields": "",
-          "reducer": [
-            "sum"
-          ],
+          "reducer": ["sum"],
           "show": false
         },
         "showHeader": true
@@ -198,12 +194,8 @@
       {
         "current": {
           "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": ["All"],
+          "value": ["$__all"]
         },
         "datasource": {
           "type": "loki",
@@ -226,12 +218,8 @@
       {
         "current": {
           "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": ["All"],
+          "value": ["$__all"]
         },
         "datasource": {
           "type": "loki",
@@ -280,7 +268,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "Hypha",
-  "uid": "74FFrqPnz",
+  "uid": "74FFrqPns",
   "version": 6,
   "weekStart": ""
 }

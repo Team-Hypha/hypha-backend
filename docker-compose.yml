@@ -1,30 +1,5 @@
 version: "3.8"
 services:
-  jaeger-collector:
-    image: jaegertracing/jaeger-collector:latest
-    environment:
-      - SPAN_STORAGE_TYPE=elasticsearch
-      - ES_SERVER_URLS=http://elasticsearch:9200
-    ports:
-      - "14250" # where gateway sends to
-      - "14269:14269"
-    depends_on:
-      - elasticsearch
-    restart: always
-
-  jaeger-query:
-    image: jaegertracing/jaeger-query:latest
-    environment:
-      - SPAN_STORAGE_TYPE=elasticsearch
-      - ES_SERVER_URLS=http://elasticsearch:9200
-    ports:
-      - "16685:16685"
-      - "16686:16686"
-      - "16687:16687"
-    depends_on:
-      - elasticsearch
-    restart: always
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
     deploy:
@@ -44,6 +19,29 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector:latest
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+    ports:
+      - "14250" # where gateway sends to
+      - "14269:14269"
+    depends_on:
+      - elasticsearch
+
+  jaeger-query:
+    image: jaegertracing/jaeger-query:latest
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - ES_SERVER_URLS=http://elasticsearch:9200
+    ports:
+      - "16685:16685"
+      - "16686:16686"
+      - "16687:16687"
+    depends_on:
+      - elasticsearch
 
   grafana:
     image: gontzess/hypha-grafana:latest
