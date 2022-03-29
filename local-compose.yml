@@ -76,7 +76,7 @@ services:
   loki-read:
     image: gontzess/hypha-loki:latest
     build: ./hypha-loki/
-    command: "-config.file=/etc/loki/config.yaml -target=read"
+    command: "-config.file=/etc/loki/config-local.yaml -target=read"
     # ports:
     #   - "3100"
     #   - "7946"
@@ -87,7 +87,7 @@ services:
   loki-write:
     image: gontzess/hypha-loki:latest
     build: ./hypha-loki/
-    command: "-config.file=/etc/loki/config.yaml -target=write"
+    command: "-config.file=/etc/loki/config-local.yaml -target=write"
     # ports:
     #   - "3100"
     #   - "7946"
@@ -130,8 +130,8 @@ services:
           worker_connections   1000;
         }
         http {
-          ## resolver 127.0.0.11;
-          resolver 169.254.169.253;
+          resolver 127.0.0.11;
+          ## resolver 169.254.169.253;
           server {
             listen             3100;
             location = / {
@@ -139,15 +139,15 @@ services:
               auth_basic off;
             }
             location = /loki/api/v1/push {
-              proxy_pass       http://loki-write.hypha-backend.local:3100\$$request_uri;
+              proxy_pass       http://loki-write:3100\$$request_uri;
             }
             location = /loki/api/v1/tail {
-              proxy_pass       http://loki-read.hypha-backend.local:3100\$$request_uri;
+              proxy_pass       http://loki-read:3100\$$request_uri;
               ## proxy_set_header Upgrade \$$http_upgrade;
               ## proxy_set_header Connection "upgrade";
             }
             location ~ /loki/api/.* {
-              proxy_pass       http://loki-read.hypha-backend.local:3100\$$request_uri;
+              proxy_pass       http://loki-read:3100\$$request_uri;
             }
           }
         }
@@ -158,20 +158,20 @@ services:
 
 volumes:
   es_data:
-    driver_opts:
-      performance-mode: maxIO
-      throughput-mode: bursting
-      uid: 0
-      gid: 0
+    # driver_opts:
+    #   performance-mode: maxIO
+    #   throughput-mode: bursting
+    #   uid: 0
+    #   gid: 0
   # loki_data:
   #   driver_opts:
   #     uid: 0
   #     gid: 0
   minio_data:
-    driver_opts:
-      uid: 0
-      gid: 0
+    # driver_opts:
+    #   uid: 0
+    #   gid: 0
   grafana_data:
-    driver_opts:
-      uid: 0
-      gid: 0
+    # driver_opts:
+    #   uid: 0
+    #   gid: 0
