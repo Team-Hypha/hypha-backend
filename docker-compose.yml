@@ -139,12 +139,9 @@ services:
       - "3100:3100"
 
   nginx:
-    image: nginx:latest
-    volumes:
-      - ./hypha-nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./hypha-nginx/static:/var/www/hypha/static
+    image: gontzess/hypha-nginx:latest
     ports:
-      - '80:80'
+      - "80:80"
 
 volumes:
   es_data:
