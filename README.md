@@ -1,28 +1,24 @@
-## Hypha Backend
+# Hypha Backend
 
-### Local Deployment
+## Local Deployment
 
 1. From project root directory, run `docker compose -f local-compose.yml up --build`
 2. View Grafana on `localhost` port `3000`
 
-### AWS ECS Deployment
+## AWS ECS Deployment
 
-<!-- TODO: Expand AWS and AWS CLI configuration details -->
-
-1. Install AWS CLI latest version
-2. Configure AWS credentials
+### Initial Setup
+1. Install [AWS CLI latest version](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+2. Configure [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html)
 3. Configure [Docker ECS Integration](https://docs.docker.com/cloud/ecs-integration/)
 
-- If on MacOS or Windows, install latest version of Docker Desktop
-- If on Linux, make sure you have Docker 19.03 or later, then also install the Docker Compose CLI:
-
-```
-curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh
-```
+- If on MacOS or Windows, install latest version of [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- If on Linux, make sure you have Docker 19.03 or later, then also install the Docker Compose CLI: `curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh`
 
 4. Create a new docker ecs context with `docker context create ecs <context-name>`
-5. Switch to the new ecs context with `docker context use <context-name>`
-6. Check that you're on the correct context with `docker context ls`
-7. From the project root directory, run `docker compose up`
-8. Once deployment processes complete, check status of services with `docker compose ps`
-9. Don't forget to switch your context back for local development! `docker context use default`
+
+### Deploy
+1. Switch to your ecs context with `docker context use <context-name>`
+2. From the project root directory, run `docker compose up`
+3. Once deployment processes complete, run `sh get-endpoints.sh` to create `endpoints.txt` file containing the gateway and dashboard endpoints
+4. If you want to return to local deployment, switch context with `docker context use default`

@@ -1,0 +1,2 @@
+Gateway collector: hypha-LoadB-JRIECT41SH92-3c6e60735d417ba2.elb.us-east-2.amazonaws.com:4317
+Nginx (hypha dashboard): hypha-LoadB-JRIECT41SH92-3c6e60735d417ba2.elb.us-east-2.amazonaws.com:80
