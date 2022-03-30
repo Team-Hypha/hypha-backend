@@ -137,7 +137,7 @@ services:
       - "3100:3100"
 
   nginx:
-    image: gontzess/hypha-nginx:latest
+    image: wboard82/hypha-nginx:latest
     ports:
       - "80:80"
 
