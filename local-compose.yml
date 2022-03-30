@@ -144,7 +144,10 @@ services:
 
   nginx:
     image: gontzess/hypha-nginx:latest
-    build: ./hypha-nginx/
+    build:
+      context: ./hypha-nginx
+      dockerfile: Dockerfile
+      target: local
     ports:
       - "80:80"
 
