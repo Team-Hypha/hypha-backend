@@ -29,4 +29,7 @@
 1. Switch to your ECS context with `docker context use <context-name>`
 2. From the project root directory, run `docker compose up`
 3. Once deployment processes complete, run `sh get-endpoints.sh` to create `endpoints.txt` file containing the gateway and dashboard endpoints
-4. If you want to return to local deployment, switch context with `docker context use default`
+
+### Teardown
+1. From the project root directory, run `docker compose down` to tear down the ECS deployment
+2. To return to local deployment, switch context with `docker context use default`
