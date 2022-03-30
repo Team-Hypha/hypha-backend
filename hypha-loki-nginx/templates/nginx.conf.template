@@ -1,0 +1,26 @@
+user  nginx;
+worker_processes  5;
+events {
+  worker_connections   1000;
+}
+http {
+  resolver ${NGINX_RESOLVER};
+  server {
+    listen             3100;
+    location = / {
+      return 200 'OK';
+      auth_basic off;
+    }
+    location = /loki/api/v1/push {
+      proxy_pass       ${NGINX_LOKI_WRITE}$request_uri;
+    }
+    location = /loki/api/v1/tail {
+      proxy_pass       ${NGINX_LOKI_READ}$request_uri;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+    location ~ /loki/api/.* {
+      proxy_pass       ${NGINX_LOKI_READ}$request_uri;
+    }
+  }
+}

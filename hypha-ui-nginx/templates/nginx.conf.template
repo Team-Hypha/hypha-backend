@@ -7,10 +7,10 @@ events {
 http {
     sendfile on;
 
-    resolver 169.254.169.253;
+    resolver ${NGINX_RESOLVER};
 
     upstream grafana {
-        server grafana.hypha-backend.local:3000;
+        server ${NGINX_SERVER};
     }
 
     server {

@@ -101,53 +101,26 @@ services:
       - minio_data:/data
 
   loki:
-    image: nginx:latest
+    image: teamhypha/hypha-loki-nginx:latest
+    build: ./hypha-loki-nginx/
     depends_on:
       - loki-read
       - loki-write
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        cat <<EOF > /etc/nginx/nginx.conf
-        user  nginx;
-        worker_processes  5;  ## Default: 1
-        events {
-          worker_connections   1000;
-        }
-        http {
-          resolver 127.0.0.11;
-          ## resolver 169.254.169.253;
-          server {
-            listen             3100;
-            location = / {
-              return 200 'OK';
-              auth_basic off;
-            }
-            location = /loki/api/v1/push {
-              proxy_pass       http://loki-write:3100\$$request_uri;
-            }
-            location = /loki/api/v1/tail {
-              proxy_pass       http://loki-read:3100\$$request_uri;
-              proxy_set_header Upgrade \$$http_upgrade;
-              proxy_set_header Connection "upgrade";
-            }
-            location ~ /loki/api/.* {
-              proxy_pass       http://loki-read:3100\$$request_uri;
-            }
-          }
-        }
-        EOF
-        /docker-entrypoint.sh nginx -g "daemon off;"
+    environment:
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
+      - NGINX_RESOLVER=127.0.0.11
+      - NGINX_LOKI_READ=http://loki-read:3100
+      - NGINX_LOKI_WRITE=http://loki-write:3100
     ports:
       - "3100:3100"
 
   nginx:
-    image: teamhypha/hypha-nginx:latest
-    build:
-      context: ./hypha-nginx
-      dockerfile: Dockerfile
-      target: local
+    image: teamhypha/hypha-ui-nginx:latest
+    build: ./hypha-ui-nginx/
+    environment:
+      - NGINX_ENVSUBST_OUTPUT_DIR=/etc/nginx
+      - NGINX_RESOLVER=127.0.0.11
+      - NGINX_SERVER=grafana:3000
     ports:
       - "80:80"
 
