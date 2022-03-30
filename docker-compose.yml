@@ -44,7 +44,7 @@ services:
       - elasticsearch
 
   grafana:
-    image: gontzess/hypha-grafana:latest
+    image: teamhypha/hypha-grafana:latest
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
@@ -55,7 +55,7 @@ services:
       - "3000:3000"
 
   collector:
-    image: gontzess/hypha-collector:latest
+    image: teamhypha/hypha-collector:latest
     command: ["--config", "/otel-config.yaml"]
     ports:
       - "4317:4317" # grpc  host:container
@@ -64,13 +64,13 @@ services:
       - loki
 
   loki-read:
-    image: gontzess/hypha-loki:latest
+    image: teamhypha/hypha-loki:latest
     command: "-config.file=/etc/loki/config.yaml -target=read"
     depends_on:
       - minio
 
   loki-write:
-    image: gontzess/hypha-loki:latest
+    image: teamhypha/hypha-loki:latest
     command: "-config.file=/etc/loki/config.yaml -target=write"
     depends_on:
       - minio
@@ -137,7 +137,7 @@ services:
       - "3100:3100"
 
   nginx:
-    image: wboard82/hypha-nginx:latest
+    image: teamhypha/hypha-nginx:latest
     ports:
       - "80:80"
 

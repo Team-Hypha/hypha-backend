@@ -46,7 +46,7 @@ services:
     restart: always
 
   grafana:
-    image: gontzess/hypha-grafana:latest
+    image: teamhypha/hypha-grafana:latest
     build: ./hypha-grafana/
     volumes:
       - grafana_data:/var/lib/grafana
@@ -58,7 +58,7 @@ services:
       - "3000:3000"
 
   collector:
-    image: gontzess/hypha-collector:latest
+    image: teamhypha/hypha-collector:latest
     build: ./hypha-collector/
     command: ["--config", "/otel-config.yaml"]
     ports:
@@ -68,14 +68,14 @@ services:
       - loki
 
   loki-read:
-    image: gontzess/hypha-loki:latest
+    image: teamhypha/hypha-loki:latest
     build: ./hypha-loki/
     command: "-config.file=/etc/loki/config-local.yaml -target=read"
     depends_on:
       - minio
 
   loki-write:
-    image: gontzess/hypha-loki:latest
+    image: teamhypha/hypha-loki:latest
     build: ./hypha-loki/
     command: "-config.file=/etc/loki/config-local.yaml -target=write"
     depends_on:
@@ -143,7 +143,7 @@ services:
       - "3100:3100"
 
   nginx:
-    image: gontzess/hypha-nginx:latest
+    image: teamhypha/hypha-nginx:latest
     build:
       context: ./hypha-nginx
       dockerfile: Dockerfile
