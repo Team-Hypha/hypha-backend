@@ -7,15 +7,21 @@
 
 ## AWS ECS Deployment
 
-### Initial Setup
+### Prerequisites
 1. Install [AWS CLI latest version](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 2. Configure [AWS credentials](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html)
-3. Configure [Docker ECS Integration](https://docs.docker.com/cloud/ecs-integration/)
+3. Setup [Docker ECS Integration](https://docs.docker.com/cloud/ecs-integration/)
 
-- If on MacOS or Windows, install latest version of [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- If on Linux, make sure you have Docker 19.03 or later, then also install the Docker Compose CLI: `curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh`
 
-4. Create a new docker ecs context with `docker context create ecs <context-name>`
+<details>
+<summary>MacOS or Windows</summary>
+<br>
+Install latest version of [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+</details>
+
+# Linux, make sure you have Docker 19.03 or later, then also install the Docker Compose CLI: `curl -L https://raw.githubusercontent.com/docker/compose-cli/main/scripts/install/install_linux.sh | sh`
+
+1. Create a new docker ecs context with `docker context create ecs <context-name>`
 
 ### Deploy
 1. Switch to your ecs context with `docker context use <context-name>`
